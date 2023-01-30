@@ -1,12 +1,15 @@
 window.onload = () => {
   const scenaryImage = new Image();
-  scenaryImage.src = 'imagenes/fondo juego super Mario.png';
+  scenaryImage.src = 'imagenes/Fondo_juego.png';
+
+  const scenaryImageLogo = new Image();
+  scenaryImageLogo.src = 'imagenes/Initial_logo.png';
 
   const marioImage = new Image();
-  marioImage.src = 'imagenes/mario.png';
+  marioImage.src = 'imagenes/Mario.png';
 
   const enemiesImage = new Image();
-  enemiesImage.src = 'imagenes/enemies.png'
+  enemiesImage.src = 'imagenes/Enemies.png'
 
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
@@ -41,25 +44,21 @@ window.onload = () => {
         }
     },
   };
-
+//hacer clase general para Mario y enemigos, y heredar de la general para marcar las caracteristicas de cada uno en su clase propia de herencia.
+//hacer clase juego que organice el jeugo y no este repartido.
+//controlar la eliminacion de enemigos del array con un delete(para machacar en memorias). 
   const mario = {
     img: marioImage,
     x: 400,
-    y: 488,
+    y: 479,
     speed: 0,
 
 
     draw: function() {
         //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
-        ctx.drawImage(this.img, 500, 0, 40, 70, 500, this.y, 30, 45);
+        ctx.drawImage(this.img, 500, 0, 40, 70, 500, this.y, 40, 55);
     }
   }
-
-  document.getElementById('start-button').onclick = () => {
-    if(!gameStarted) {
-      startGame();
-    }
-  };
 
   class Enemies {
     constructor() {
@@ -124,6 +123,8 @@ window.onload = () => {
         if (!jump)
         jump = true;
         break;
+      case " ":
+        startGame();
     }
   })
   // start calling updateCanvas once the image is loaded
