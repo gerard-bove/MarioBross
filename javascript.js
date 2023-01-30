@@ -1,6 +1,9 @@
 window.onload = () => {
   const scenaryImage = new Image();
-  scenaryImage.src = 'imagenes/Fondo_juego.png'; //quitar espacios
+  scenaryImage.src = 'imagenes/Fondo_juego.png';
+
+  const scenaryImageLogo = new Image();
+  scenaryImageLogo.src = 'imagenes/Initial_logo.png';
 
   const marioImage = new Image();
   marioImage.src = 'imagenes/Mario.png';
@@ -35,7 +38,9 @@ window.onload = () => {
         }
     },
   };
-
+//hacer clase general para Mario y enemigos, y heredar de la general para marcar las caracteristicas de cada uno en su clase propia de herencia.
+//hacer clase juego que organice el jeugo y no este repartido.
+//controlar la eliminacion de enemigos del array con un delete(para machacar en memorias). 
   const mario = {
     img: marioImage,
     x: 400,
