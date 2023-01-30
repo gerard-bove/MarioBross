@@ -19,8 +19,9 @@ window.onload = () => {
   let jumpCount = 0;
   let enemiesCount = 0;
 
-  class Character {
+  class Koopa {
     constructor() {
+      this.img = enemiesImage;
       this.xCut = 162;
       this.yCut = 0;
       this.wCut = 30;
@@ -32,34 +33,47 @@ window.onload = () => {
       this.speed = 4;
     }
 
+    moveLeft() {
+      this.xCanvas -= this.speed
+    }
+
     draw() {
       //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
       ctx.drawImage(this.img, this.xCut, this.yCut, this.wCut, this.hCut, this.xCanvas, this.yCanvas, this.wCanvas, this.hCanvas);
     }
   }
 
-  class Mario extends Character {
+  class Mario{
     constructor() {
-      super(yCut, )
-      this.imgn = marioImage;
+      this.img = marioImage;
       this.xCut = 500;
-      /* this.yCut = 0; */
+      this.yCut = 0;
       this.wCut = 40;
       this.hCut = 70;
       this.xCanvas = 500;
       this.yCanvas = 479;
-      this.wCanvas = 35;
-      this.hCanvas = 40;
+      this.wCanvas = 40;
+      this.hCanvas = 55;
       this.speed = 5;
     }
 
-    moveJump() {
+    moveUp() {
+      this.yCanvas -= this.speed;
+    }
+
+    moveDown() {
       this.yCanvas += this.speed;
     }
+
+    draw() {
+      //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
+      ctx.drawImage(this.img, this.xCut, this.yCut, this.wCut, this.hCut, this.xCanvas, this.yCanvas, this.wCanvas, this.hCanvas);
+  }  
   }
   
-  class Koopa extends Character {
-    constructor() {
+  /* class Koopa extends Character {
+    constructor(yCut) {
+      super(yCut)
       this.img = enemiesImage;
       this.xCut = 162;
       this.yCut = 0;
@@ -78,7 +92,7 @@ window.onload = () => {
       //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
       ctx.drawImage(this.img, this.xCut, this.yCut, this.wCut, this.hCut, this.xCanvas, this.yCanvas, this.wCanvas, this.hCanvas);
     }
-  }
+  } */
 
   const backgroundImage = {
     img: scenaryImage,
@@ -148,8 +162,8 @@ window.onload = () => {
       backgroundImage.move();
 
       if (jump) {   //Jump activado por la tecla flecha hacia arriba
-        if (jumpCount < 20) mario.y -= 5;
-        if (jumpCount >= 20) mario.y += 5;
+        if (jumpCount < 20) mario.moveUp();
+        if (jumpCount >= 20) mario.moveDown();
         jumpCount ++;
         if (jumpCount >= 40) {
           jump = false;
@@ -163,7 +177,6 @@ window.onload = () => {
         enemiesCount = 0;
       }
       if (enemiesArmy.length > 5) enemiesArmy.shift();
-      console.log(enemiesArmy.length);
 
       //repintar todo//
       ctx.clearRect(0, 0, canvas.width, canvas.height); //borrar todo
@@ -189,8 +202,7 @@ window.onload = () => {
         jump = true;
         break;
       case ' ':
-        if (!gameStarted) startGame();  
-        console.log("HOLA") 
+        if (!gameStarted) startGame();
         break;
     }
   })  
