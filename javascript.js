@@ -19,44 +19,8 @@ window.onload = () => {
   let jumpCount = 0;
   let enemiesCount = 0;
 
-  const backgroundImage = {
-    img: scenaryImage,
-    x: 0,
-    speed: -2,
-
-    move: function() {
-      this.x += this.speed;
-      this.x %= canvas.width;
-    },
-
-    draw: function() {
-        ctx.drawImage(this.img, this.x, 0);
-        if (this.speed < 0) {
-          ctx.drawImage(this.img, this.x + canvas.width, 0);
-        } else {
-          ctx.drawImage(this.img, this.x - this.img.width, 0);
-        }
-    },
-  };
-//hacer clase general para Mario y enemigos, y heredar de la general para marcar las caracteristicas de cada uno en su clase propia de herencia.
-//hacer clase juego que organice el jeugo y no este repartido.
-//controlar la eliminacion de enemigos del array con un delete(para machacar en memorias). 
-  const mario = {
-    img: marioImage,
-    x: 400,
-    y: 479,
-    speed: 0,
-
-
-    draw: function() {
-        //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
-        ctx.drawImage(this.img, 500, 0, 40, 70, 500, this.y, 40, 55);
-    }
-  }
-
-  class Enemies {
+  class Character {
     constructor() {
-      this.img = enemiesImage;
       this.xCut = 162;
       this.yCut = 0;
       this.wCut = 30;
@@ -74,8 +38,105 @@ window.onload = () => {
     }
   }
 
-  const enemiesArmy = [];
+  class Mario extends Character {
+    constructor() {
+      super(yCut, )
+      this.imgn = marioImage;
+      this.xCut = 500;
+      /* this.yCut = 0; */
+      this.wCut = 40;
+      this.hCut = 70;
+      this.xCanvas = 500;
+      this.yCanvas = 479;
+      this.wCanvas = 35;
+      this.hCanvas = 40;
+      this.speed = 5;
+    }
 
+    moveJump() {
+      this.yCanvas += this.speed;
+    }
+  }
+  
+  class Koopa extends Character {
+    constructor() {
+      this.img = enemiesImage;
+      this.xCut = 162;
+      this.yCut = 0;
+      this.wCut = 30;
+      this.hCut = 30;
+      this.xCanvas = 1100;
+      this.yCanvas = 484;
+      this.wCanvas = 35;
+      this.hCanvas = 40;
+      this.speed = 4;
+    }
+    moveLeft() {
+      this.xCanvas -= this.speed
+    }
+    draw() {
+      //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
+      ctx.drawImage(this.img, this.xCut, this.yCut, this.wCut, this.hCut, this.xCanvas, this.yCanvas, this.wCanvas, this.hCanvas);
+    }
+  }
+
+  const backgroundImage = {
+    img: scenaryImage,
+    x: 0,
+    speed: -2,
+
+    move: function() {
+      this.x += this.speed;
+      this.x %= canvas.width;
+    },
+
+    draw: function() {
+      ctx.drawImage(this.img, this.x, 0);
+      if (this.speed < 0) {
+        ctx.drawImage(this.img, this.x + canvas.width, 0);
+      } else {
+        ctx.drawImage(this.img, this.x - this.img.width, 0);
+      }
+    },
+  };
+//hacer clase general para Mario y enemigos, y heredar de la general para marcar las caracteristicas de cada uno en su clase propia de herencia.
+//hacer clase juego que organice el jeugo y no este repartido.
+//controlar la eliminacion de enemigos del array con un delete(para machacar en memorias). 
+/*   const mario = {
+    img: marioImage,
+    x: 400,
+    y: 479,
+    speed: 0,
+
+
+    draw: function() {
+        //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
+        ctx.drawImage(this.img, 500, 0, 40, 70, 500, this.y, 40, 55);
+    }
+  } */
+
+  /* class Enemies {
+    constructor() {
+      this.img = enemiesImage;
+      this.xCut = 162;
+      this.yCut = 0;
+      this.wCut = 30;
+      this.hCut = 30;
+      this.xCanvas = 1100;
+      this.yCanvas = 484;
+      this.wCanvas = 35;
+      this.hCanvas = 40;
+      this.speed = 4;
+    }
+
+    draw() {
+      //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
+      ctx.drawImage(this.img, this.xCut, this.yCut, this.wCut, this.hCut, this.xCanvas, this.yCanvas, this.wCanvas, this.hCanvas);
+    }
+  } */
+
+  const enemiesArmy = [];
+  let mario = new Mario();
   ////////Initial images///////////
 
 
@@ -98,7 +159,7 @@ window.onload = () => {
 
       enemiesCount ++;
       if (enemiesCount == 70) {
-        enemiesArmy.push(new Enemies());
+        enemiesArmy.push(new Koopa());
         enemiesCount = 0;
       }
       if (enemiesArmy.length > 5) enemiesArmy.shift();
@@ -109,9 +170,8 @@ window.onload = () => {
       backgroundImage.draw(); 
       mario.draw();
       enemiesArmy.forEach((enemy) => {
-        enemy.xCanvas -= enemy.speed; //desplazar la posición de todos los enemigos hacia la izquierda
+        enemy.moveLeft()  //desplazar la posición de todos los enemigos hacia la izquierda
         enemy.draw();   //pintar toda la array de enemigos
-
       });
     }
 
@@ -129,7 +189,8 @@ window.onload = () => {
         jump = true;
         break;
       case ' ':
-        if (!gameStarted) startGame();   
+        if (!gameStarted) startGame();  
+        console.log("HOLA") 
         break;
     }
   })  
