@@ -45,13 +45,13 @@ window.onload = () => {
   const mario = {
     img: marioImage,
     x: 400,
-    y: 479,
+    y: 488,
     speed: 0,
 
 
     draw: function() {
         //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
-        ctx.drawImage(this.img, 500, 0, 40, 70, 500, this.y, 40, 55);
+        ctx.drawImage(this.img, 500, 0, 40, 70, 500, this.y, 30, 45);
     }
   }
 
