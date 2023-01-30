@@ -1,12 +1,12 @@
 window.onload = () => {
   const scenaryImage = new Image();
-  scenaryImage.src = 'imagenes/fondo juego super Mario.png';
+  scenaryImage.src = 'imagenes/Fondo_juego.png'; //quitar espacios
 
   const marioImage = new Image();
-  marioImage.src = 'imagenes/mario.png';
+  marioImage.src = 'imagenes/Mario.png';
 
   const enemiesImage = new Image();
-  enemiesImage.src = 'imagenes/enemies.png'
+  enemiesImage.src = 'imagenes/Enemies.png'
 
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
@@ -15,17 +15,11 @@ window.onload = () => {
   let jump = false;
   let jumpCount = 0;
   let enemiesCount = 0;
-  /* const marioImage = document.createElement("img");
-  marioImage.src = "imagenes/marioSprite.png"; */
 
-  /* marioImage.addEventListener('load', ()=> {
-  //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
-    ctx.drawImage(marioImage, 2, 100, 50, 50, 500, 200, 50, 50);
-  }) */
   const backgroundImage = {
     img: scenaryImage,
     x: 0,
-    speed: -1,
+    speed: -2,
 
     move: function() {
       this.x += this.speed;
@@ -55,12 +49,6 @@ window.onload = () => {
     }
   }
 
-  document.getElementById('start-button').onclick = () => {
-    if(!gameStarted) {
-      startGame();
-    }
-  };
-
   class Enemies {
     constructor() {
       this.img = enemiesImage;
@@ -80,14 +68,20 @@ window.onload = () => {
       ctx.drawImage(this.img, this.xCut, this.yCut, this.wCut, this.hCut, this.xCanvas, this.yCanvas, this.wCanvas, this.hCanvas);
     }
   }
+
   const enemiesArmy = [];
 
+  ////////Initial images///////////
+
+
+  ////////Start game///////////
   function startGame() {
     gameStarted = true;
 
     function update() {
       backgroundImage.move();
-      if (jump) {
+
+      if (jump) {   //Jump activado por la tecla flecha hacia arriba
         if (jumpCount < 20) mario.y -= 5;
         if (jumpCount >= 20) mario.y += 5;
         jumpCount ++;
@@ -104,12 +98,15 @@ window.onload = () => {
       }
       if (enemiesArmy.length > 5) enemiesArmy.shift();
       console.log(enemiesArmy.length);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      backgroundImage.draw();
+
+      //repintar todo//
+      ctx.clearRect(0, 0, canvas.width, canvas.height); //borrar todo
+      backgroundImage.draw(); 
       mario.draw();
       enemiesArmy.forEach((enemy) => {
-        enemy.xCanvas -= enemy.speed;
-        enemy.draw();
+        enemy.xCanvas -= enemy.speed; //desplazar la posición de todos los enemigos hacia la izquierda
+        enemy.draw();   //pintar toda la array de enemigos
+
       });
     }
 
@@ -118,25 +115,18 @@ window.onload = () => {
     }, 40)
   }
 
+  ///////Manejo teclado//////////
   document.getElementsByTagName("body")[0].addEventListener("keydown", (event)=>{
+    event.preventDefault();
     switch(event.key){
       case "ArrowUp":
         if (!jump)
         jump = true;
         break;
+      case ' ':
+        if (!gameStarted) startGame();   
+        break;
     }
-  })
-  // start calling updateCanvas once the image is loaded
-  //img.onload = updateCanvas;
-
-  /* const marioImage = document.createElement("img");
-  marioImage.src = "imagenes/marioSprite.png"; */
- /*  function drawMario() {
-    marioImage.addEventListener('load', ()=> {
-      //ctx.drawImage(imagenSprite, x_recorte, y_recorte, w_recorte, h_recorte, x_canvas, y_canvas, w_imagen, h_imagen);
-      ctx.drawImage(marioImage, 2, 100, 50, 50, 500, 200, 50, 50);
-    })
-  } */
-  
+  })  
 }
 
