@@ -76,9 +76,28 @@ window.onload = () => {
 
   const enemiesArmy = [];
 
+  class ScoreEngine {
+  
+    constructor() {
+      this.score = 0;
+    }
+  
+    updateScore() {
+      this.score += points;
+    }
+  
+    resetScore() {
+      this.score = 0;
+    }
+  }
   ////////Initial images///////////
-
-
+  // let imagenFondo = 
+  scenaryImage.onload = () => {
+ ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
+  }
+  scenaryImageLogo.onload = () => {
+  ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+  }
   ////////Start game///////////
   function startGame() {
     gameStarted = true;
