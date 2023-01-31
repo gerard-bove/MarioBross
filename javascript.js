@@ -14,6 +14,12 @@ window.onload = () => {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
 
+  let welcomeMessage = "Press Spacebar to start game";
+  ctx.font = "25px Arial";
+  ctx.fillStyle = "white";
+  let flicker = true;
+  let flickerCount = 0;
+
   let gameStarted = false;
   let jump = false;
   let jumpCount = 0;
@@ -93,10 +99,22 @@ window.onload = () => {
   ////////Initial images///////////
   // let imagenFondo = 
   scenaryImage.onload = () => {
- ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
+
+ if (!gameStarted) ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
   }
   scenaryImageLogo.onload = () => {
-  ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+  if (!gameStarted) {
+    ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+    function flickerWelcomeMessage() {
+        if (flickerCount < 10) ctx.fillText(welcomeMessage, 370, 350);
+        if (flickerCount > 10) ctx.clearRect(20,20,20,20)
+        flickerCount ++;
+        if (flickerCount >= 20) {
+          flickerCount = 0;
+        }
+       }
+      flickerWelcomeMessage();
+      }
   }
   ////////Start game///////////
   function startGame() {
