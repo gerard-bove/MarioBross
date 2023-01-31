@@ -14,30 +14,6 @@ window.onload = () => {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
 
-  //koopa variables//
-  let xCutKoopa = 166;
-  let yCutKoopa = 0;
-  let wCutKoopa = 25;
-  let hCutKoopa = 30;
-  let xCanvasKoopa = 1100;
-  let xSpeedKoopa = 5;
-
-  //Mario variables//
-  let xCutMario = 500;
-  let yCutMario = 0;
-  let wCutMario = 30;
-  let hCutMario = 57;
-  let xCanvasMario = 500;
-  let xSpeedMario = 5;
-  let ySpeedMario = 5;
-
-  //game variables//
-  const enemiesArmy = [];
-  let gameStarted = false;
-  let jump = false;
-  let jumpCount = 0;
-  let enemiesCount = 0;
-
   class Character {  
     constructor(img, xCut, yCut, wCut, hCut, xCanvas, wCanvas, hCanvas, xSpeed, ySpeed) {
       this.img = img;
@@ -60,7 +36,7 @@ window.onload = () => {
   }
   class Koopa extends Character{
     constructor() {
-      super(koopaImage, xCutKoopa, yCutKoopa, wCutKoopa, hCutKoopa, xCanvasKoopa, 35, 40, xSpeedKoopa)
+      super(koopaImage, 166, 0, 25, 30, 1100, 35, 40, 5)
     }
 
     moveLeft() {
@@ -70,16 +46,25 @@ window.onload = () => {
 
   class Mario extends Character{
     constructor() {
-      super(marioImage, xCutMario, yCutMario, wCutMario, hCutMario, xCanvasMario, 28, 50, xSpeedMario, ySpeedMario)
+      super(marioImage, 500, 0, 30, 57, 500, 28, 50, 5, -7)
+    }
+    
+    jumpAction() {
+      this.yCanvas = this.yCanvas + mario.ySpeed + 1;
+      if (this.yCanvas < 350) mario.ySpeed = 8;
+      if (this.yCanvas > 400 && this.yCanvas < 450) {
+        this.jump = false;
+        console.log("HOLA");
+      }
     }
 
-    moveUp() {
+    /* moveUp() {
       this.yCanvas -= this.ySpeed;
     }
 
     moveDown() {
       this.yCanvas += this.ySpeed;
-    }
+    } */
   }
 
   const backgroundImage = {
@@ -104,24 +89,25 @@ window.onload = () => {
 
   class Game {
     constructor(){
-      this.enemiesArmy = enemiesArmy;
-      this.gameStarted = gameStarted;
-      this.jump = jump;
-      this.jumpCount = jumpCount;
-      this.enemiesCount = enemiesCount;
-      this.identificator
+      this.enemiesArmy = [];
+      this.gameStarted = false;
+      this.jump = false;
+      this.jumpCount = 0;
+      this.enemiesCount = 0;
+      this.identificator;
+      this.gravity = 2
     }
 
-    jumpAction() {
-      if (this.jumpCount < 20) mario.moveUp();
-        if (this.jumpCount >= 20) mario.moveDown();
+      /* jumpAction() {
+      if (this.jumpCount < 18) mario.moveUp();
+        if (this.jumpCount >= 18) mario.moveDown();
         this.jumpCount ++;
-        if (this.jumpCount >= 40) {
+        if (this.jumpCount >= 36) {
           this.jump = false;
           this.jumpCount = 0;
         }
-    }
-    
+    } */ 
+
     newEnemy() {
       this.enemiesArmy.push(new Koopa());
       this.enemiesCount = 0;
@@ -134,35 +120,45 @@ window.onload = () => {
     }
 
     gameOver() {
-      clearInterval(this.identificator)
+      clearInterval(this.identificator);
+      ctx.clearRect(0, 0, canvas.width, canvas.height); //borrar todas las imagenes
+      this.gameStarted = false;   //resetear todas las variables
+      this.enemiesArmy.splice(0, this.enemiesArmy.length);
+      this.jump = false;
+      this.jumpCount = 0;
+      this.enemiesCount = 0;
+      mario.yCanvas = 524 - mario.hCanvas; 
     }
 
     update() {
       backgroundImage.move();
 
       if (this.jump) {   //Jump activado por la tecla flecha hacia arriba
-        this.jumpAction();
+        mario.jumpAction();
       }
 
       this.enemiesCount ++;
       if (this.enemiesCount == 70) {
         this.newEnemy();
       }
-      if (this.enemiesArmy.length > 5) enemiesArmy.shift();   //eliminar los enemigos que ya han pasado por el escenario
+      if (this.enemiesArmy.length > 5) this.enemiesArmy.shift();   //eliminar los enemigos que ya han pasado por el escenario
 
       this.drawAll();
       
-      enemiesArmy.forEach((enemy) => {
+      this.enemiesArmy.forEach((enemy) => {
         enemy.moveLeft()  //desplazar la posición de todos los enemigos hacia la izquierda
         enemy.draw();   //pintar toda la array de enemigos
         if ( mario.xCanvas + mario.wCanvas > enemy.xCanvas && mario.xCanvas < enemy.xCanvas + enemy.wCanvas ) {
           if ( mario.yCanvas + mario.hCanvas > enemy.yCanvas) this.gameOver();
         }
+        if ( mario.xCanvas + mario.wCanvas > enemy.xCanvas + 3 && mario.xCanvas + 3 < enemy.xCanvas + enemy.wCanvas ) {
+          if ( mario.yCanvas + mario.hCanvas > enemy.yCanvas -5 ) clearInterval(this.identificator);
+        }
       });
     }
 
     startGame() {
-      gameStarted = true;
+      this.gameStarted = true;
       this.identificator = setInterval(()=> {
         this.update();
       }, 40)
@@ -186,7 +182,9 @@ window.onload = () => {
         game.jump = true;
         break;
       case ' ':
-        if (!gameStarted) game.startGame(); //la tecla "espacio" inicia el juego;
+        if (!game.gameStarted) {
+          game.startGame(); //la tecla "espacio" inicia el juego;
+        }
         break;
     }
   })  
