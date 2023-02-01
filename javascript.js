@@ -107,6 +107,7 @@ window.onload = () => {
       this.identificator;
       this.enemyIndex;
       this.randomCounterEnemies = 20 + Math.floor(Math.random() * 60);
+      this.numberOfEnemies = 0;
     }
 
     newEnemy() {
@@ -231,10 +232,10 @@ scenaryImage.onload = () => {
         }
         break;
       case "ArrowLeft":
-        mario.xCanvas -= 5;
+        if (mario.xCanvas > 0) mario.xCanvas -= 5;
       break;
       case "ArrowRight":
-        mario.xCanvas += 5;
+        if (mario.xCanvas < 1056 - mario.wCanvas) mario.xCanvas += 5;
     }
   })  
 }
