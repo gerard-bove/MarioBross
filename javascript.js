@@ -21,6 +21,7 @@ window.onload = () => {
   ctx.font = "25px Arial";
   ctx.fillStyle = "white";
   let flickerCount = 0;
+  let marioCount = 0;
   let flick;
 
   let gameOverMessage = "Press Spacebar to restart";
@@ -64,6 +65,7 @@ window.onload = () => {
       super(marioImage, 500, 0, 30, 57, 500, 28, 50, 5, -6)
       this.down = false;
       this.killEnemy = false;
+      
     }
     
     jumpAction() {
@@ -147,6 +149,10 @@ window.onload = () => {
 
     update() {
       backgroundImage.move();
+      marioCount ++;
+      if (marioCount < 20) mario.yCut = 100;
+      if (marioCount > 20) mario.yCut = 200;
+      if (marioCount == 40) marioCount = 0;
 
       if (this.jump) {   //Jump activado por la tecla flecha hacia arriba
         mario.jumpAction();
@@ -210,25 +216,8 @@ window.onload = () => {
   }
 
   let mario = new Mario();
-  /* class ScoreEngine {
-  
-    constructor() {
-      this.score = 0;
-    }
-  
-    updateScore() {
-      this.score += points;
-    }
-  
-    resetScore() {
-      this.score = 0;
-    }
-  } */
-
   
 ////////Initial images///////////
-
-
 
 scenaryImage.onload = () => {
   if (!game.gameStarted) {
@@ -236,8 +225,7 @@ scenaryImage.onload = () => {
   }
 }
 
-    scenaryImageLogo.onload = () => {
-      
+scenaryImageLogo.onload = () => { 
       if (!game.gameStarted) {
         ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
         controlFlik();
