@@ -106,12 +106,13 @@ window.onload = () => {
       this.enemiesCount = 0;
       this.identificator;
       this.enemyIndex;
-      
+      this.randomCounterEnemies = 20 + Math.floor(Math.random() * 60);
     }
 
     newEnemy() {
       this.enemiesArmy.push(new Koopa());
       this.enemiesCount = 0;
+      this.randomCounterEnemies = 20 + Math.floor(Math.random() * 60);
     }
 
     drawAll() {
@@ -128,6 +129,7 @@ window.onload = () => {
       this.jump = false;
       this.jumpCount = 0;
       this.enemiesCount = 0;
+      mario.xCanvas = 500;
       mario.yCanvas = 524 - mario.hCanvas; 
     }
 
@@ -139,21 +141,24 @@ window.onload = () => {
       }
 
       this.enemiesCount ++;
-      if (this.enemiesCount == 70) {
+      if (this.enemiesCount == this.randomCounterEnemies) {
         this.newEnemy();
       }
-      if (this.enemiesArmy.length > 5) this.enemiesArmy.shift();   //eliminar los enemigos que ya han pasado por el escenario
-
+      if (this.enemiesArmy.length > 0) {
+        if (this.enemiesArmy[0].xCanvas < 0) this.enemiesArmy.shift();   //eliminar los enemigos que ya han pasado por el escenario
+      }
+      
+      
       this.drawAll();
       
       this.enemiesArmy.forEach((enemy, indice) => {
-        enemy.moveLeft()  //desplazar la posición de todos los enemigos hacia la izquierda
-        enemy.draw();   //pintar toda la array de enemigos
-        if ( mario.xCanvas + mario.wCanvas > enemy.xCanvas && mario.xCanvas < enemy.xCanvas + enemy.wCanvas ) {
-          if ( mario.yCanvas + mario.hCanvas > enemy.yCanvas + 8) this.gameOver();
+        enemy.moveLeft()  //desplazar la posición de todos los enemigos(Koopa) hacia la izquierda
+        enemy.draw();   //pintar toda la array de enemigos(Koopa)
+        if ( mario.xCanvas + mario.wCanvas > enemy.xCanvas && mario.xCanvas < enemy.xCanvas + enemy.wCanvas ) { //colision eje X
+          if ( mario.yCanvas + mario.hCanvas > enemy.yCanvas + 8) this.gameOver();  //colision eje y
         }
-        if ( mario.xCanvas + mario.wCanvas > enemy.xCanvas + 3 && mario.xCanvas + 3 < enemy.xCanvas + enemy.wCanvas ) {
-          if ( mario.yCanvas + mario.hCanvas > enemy.yCanvas -10 && mario.killEnemy == false ) {
+        if ( mario.xCanvas + mario.wCanvas > enemy.xCanvas + 3 && mario.xCanvas + 3 < enemy.xCanvas + enemy.wCanvas ) { //colision por arriba: matar enemigo
+          if ( mario.yCanvas + mario.hCanvas > enemy.yCanvas -10 && mario.killEnemy == false ) {  //colision por arriba: matar enemigo
             mario.killEnemy = true;
             this.enemiesArmy.splice(indice, 1);
           }
