@@ -17,7 +17,6 @@ window.onload = () => {
   let welcomeMessage = "Press Spacebar to start game";
   ctx.font = "25px Arial";
   ctx.fillStyle = "white";
-  let flicker = true;
   let flickerCount = 0;
 
   class Character {  
@@ -123,12 +122,13 @@ window.onload = () => {
     gameOver() {
       clearInterval(this.identificator);
       ctx.clearRect(0, 0, canvas.width, canvas.height); //borrar todas las imagenes
+      //hacer drawImage de Game Over
       this.gameStarted = false;   //resetear todas las variables
       this.enemiesArmy.splice(0, this.enemiesArmy.length);
       this.jump = false;
       this.jumpCount = 0;
       this.enemiesCount = 0;
-      mario.yCanvas = 524 - mario.hCanvas; 
+      mario.yCanvas = 524 - mario.hCanvas;
     }
 
     update() {
@@ -187,26 +187,45 @@ window.onload = () => {
 
   
 ////////Initial images///////////
-// let imagenFondo = 
-scenaryImage.onload = () => {
 
-  if (!Game.gameStarted) ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
-    }
+
+
+scenaryImage.onload = () => {
+  if (!game.gameStarted) {
+    ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
+  }
+}
+
     scenaryImageLogo.onload = () => {
-    if (!Game.gameStarted) {
-      ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+      if (!game.gameStarted) {
+        ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+        controlFlik();
       function flickerWelcomeMessage() {
-          if (flickerCount < 10) ctx.fillText(welcomeMessage, 370, 350);
-          if (flickerCount > 10) ctx.clearRect(100,100,100,100)
-          flickerCount ++;
-          if (flickerCount >= 20) {
-            flickerCount = 0;
-          }
+        flickerCount ++;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+        if (!game.gameStarted && flickerCount %3 == 0) {
+          
+          ctx.fillText(welcomeMessage, 370, 350);
         }
-        flickerWelcomeMessage();
+      }
+      function controlFlik() {
+        let identificador2 = setInterval(()=> {
+          flickerWelcomeMessage();
+        }, 1000);
+      }
+    
+  
+    // function parpadeando (){
+    //   if (!Game.gameStarted) parpadeo;
+    //   if (Game.gameStarted) clearInterval(parpadeo);
+    //         }
+        
         }
   }
 
+//}
 
   ////////Start game///////////
 
@@ -220,7 +239,7 @@ scenaryImage.onload = () => {
         if (!game.jump)
         game.jump = true;
         break;
-      case ' ':
+      case ' ': 
         if (!game.gameStarted) {
           game.startGame(); //la tecla "espacio" inicia el juego;
         }
