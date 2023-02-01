@@ -11,14 +11,23 @@ window.onload = () => {
   const koopaImage = new Image();
   koopaImage.src = 'imagenes/Enemies.png'
 
+  const gameOverScreen = new Image();
+  gameOverScreen.src = 'imagenes/Game_over_screen.webp'
+
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
 
   let welcomeMessage = "Press Spacebar to start game";
   ctx.font = "25px Arial";
   ctx.fillStyle = "white";
-  let flicker = true;
   let flickerCount = 0;
+  let flick;
+
+  let gameOverMessage = "Press Spacebar to restart";
+  ctx.font = "25px Arial";
+  ctx.fillStyle = "white";
+  let flickerCount2 = 0;
+  let flick2;
 
   class Character {  
     constructor(img, xCut, yCut, wCut, hCut, xCanvas, wCanvas, hCanvas, xSpeed, ySpeed) {
@@ -131,7 +140,9 @@ window.onload = () => {
       this.jumpCount = 0;
       this.enemiesCount = 0;
       mario.xCanvas = 500;
-      mario.yCanvas = 524 - mario.hCanvas; 
+      mario.yCanvas = 524 - mario.hCanvas;
+      //hacer drawImage de Game Over y llamar al texto "Press Space-bar"
+      this.gameOverMessage();
     }
 
     update() {
@@ -169,9 +180,32 @@ window.onload = () => {
 
     startGame() {
       this.gameStarted = true;
+      clearInterval(flick);
+      clearInterval(flick2);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       this.identificator = setInterval(()=> {
         this.update();
       }, 35)
+    }
+    gameOverMessage() {
+      function flickerGameOverMessage() {
+        flickerCount2 ++;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(gameOverScreen, 0, 0, canvas.width, canvas.height);
+        if (!game.gameStarted && flickerCount2 %2 == 0) ctx.fillText(gameOverMessage, 370, 350);
+      }
+
+      if (!game.gameStarted) {
+        ctx.drawImage(gameOverScreen, 0, 0, canvas.width, canvas.height);
+        controlFlik2();
+      
+    }
+      function controlFlik2() {
+        flick2 = setInterval(()=> {
+          flickerGameOverMessage();
+        }, 1000);
+      }
+
     }
   }
 
@@ -193,26 +227,37 @@ window.onload = () => {
 
   
 ////////Initial images///////////
-// let imagenFondo = 
-scenaryImage.onload = () => {
 
-  if (!Game.gameStarted) ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
-    }
+
+
+scenaryImage.onload = () => {
+  if (!game.gameStarted) {
+    ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
+  }
+}
+
     scenaryImageLogo.onload = () => {
-    if (!Game.gameStarted) {
-      ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+      
+      if (!game.gameStarted) {
+        ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+        controlFlik();
       function flickerWelcomeMessage() {
-          if (flickerCount < 10) ctx.fillText(welcomeMessage, 370, 350);
-          if (flickerCount > 10) ctx.clearRect(100,100,100,100)
-          flickerCount ++;
-          if (flickerCount >= 20) {
-            flickerCount = 0;
-          }
-        }
+        flickerCount ++;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+        if (!game.gameStarted && flickerCount %2 == 0) ctx.fillText(welcomeMessage, 370, 350);
+      }
+    }
+    function controlFlik() {
+      flick = setInterval(()=> {
         flickerWelcomeMessage();
-        }
+      }, 1000);
+    }
+    
   }
 
+//}
 
   ////////Start game///////////
 
@@ -226,7 +271,7 @@ scenaryImage.onload = () => {
         if (!game.jump)
         game.jump = true;
         break;
-      case ' ':
+      case ' ': 
         if (!game.gameStarted) {
           game.startGame(); //la tecla "espacio" inicia el juego;
         }
