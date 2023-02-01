@@ -107,7 +107,7 @@ window.onload = () => {
     ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
     function flickerWelcomeMessage() {
         if (flickerCount < 10) ctx.fillText(welcomeMessage, 370, 350);
-        if (flickerCount > 10) ctx.clearRect(20,20,20,20)
+        if (flickerCount > 10) ctx.clearRect(100,100,100,100)
         flickerCount ++;
         if (flickerCount >= 20) {
           flickerCount = 0;
