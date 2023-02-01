@@ -190,10 +190,10 @@ window.onload = () => {
 // let imagenFondo = 
 scenaryImage.onload = () => {
 
-  if (!gameStarted) ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
+  if (!Game.gameStarted) ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
     }
     scenaryImageLogo.onload = () => {
-    if (!gameStarted) {
+    if (!Game.gameStarted) {
       ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
       function flickerWelcomeMessage() {
           if (flickerCount < 10) ctx.fillText(welcomeMessage, 370, 350);
