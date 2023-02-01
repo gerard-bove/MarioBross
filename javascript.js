@@ -11,6 +11,9 @@ window.onload = () => {
   const koopaImage = new Image();
   koopaImage.src = 'imagenes/Enemies.png'
 
+  const gameOverScreen = new Image();
+  gameOverScreen.src = 'imagenes/Game_over_screen.webp'
+
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
 
@@ -18,6 +21,13 @@ window.onload = () => {
   ctx.font = "25px Arial";
   ctx.fillStyle = "white";
   let flickerCount = 0;
+  let flick;
+
+  let gameOverMessage = "Press Spacebar to restart";
+  ctx.font = "25px Arial";
+  ctx.fillStyle = "white";
+  let flickerCount2 = 0;
+  let flick2;
 
   class Character {  
     constructor(img, xCut, yCut, wCut, hCut, xCanvas, wCanvas, hCanvas, xSpeed, ySpeed) {
@@ -122,13 +132,14 @@ window.onload = () => {
     gameOver() {
       clearInterval(this.identificator);
       ctx.clearRect(0, 0, canvas.width, canvas.height); //borrar todas las imagenes
-      //hacer drawImage de Game Over
       this.gameStarted = false;   //resetear todas las variables
       this.enemiesArmy.splice(0, this.enemiesArmy.length);
       this.jump = false;
       this.jumpCount = 0;
       this.enemiesCount = 0;
       mario.yCanvas = 524 - mario.hCanvas;
+      //hacer drawImage de Game Over y llamar al texto "Press Space-bar"
+      this.gameOverMessage();
     }
 
     update() {
@@ -138,8 +149,8 @@ window.onload = () => {
         mario.jumpAction();
       }
 
-      this.enemiesCount ++;
-      if (this.enemiesCount == 70) {
+      if (this.enemiesCount == Math.floor(Math.random() * 40)) {
+        
         this.newEnemy();
       }
       if (this.enemiesArmy.length > 5) this.enemiesArmy.shift();   //eliminar los enemigos que ya han pasado por el escenario
@@ -163,9 +174,32 @@ window.onload = () => {
 
     startGame() {
       this.gameStarted = true;
+      clearInterval(flick);
+      clearInterval(flick2);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       this.identificator = setInterval(()=> {
         this.update();
       }, 35)
+    }
+    gameOverMessage() {
+      function flickerGameOverMessage() {
+        flickerCount2 ++;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(gameOverScreen, 0, 0, canvas.width, canvas.height);
+        if (!game.gameStarted && flickerCount2 %2 == 0) ctx.fillText(gameOverMessage, 370, 350);
+      }
+
+      if (!game.gameStarted) {
+        ctx.drawImage(gameOverScreen, 0, 0, canvas.width, canvas.height);
+        controlFlik2();
+      
+    }
+      function controlFlik2() {
+        flick2 = setInterval(()=> {
+          flickerGameOverMessage();
+        }, 1000);
+      }
+
     }
   }
 
@@ -197,6 +231,7 @@ scenaryImage.onload = () => {
 }
 
     scenaryImageLogo.onload = () => {
+      
       if (!game.gameStarted) {
         ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
         controlFlik();
@@ -205,24 +240,15 @@ scenaryImage.onload = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
         ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
-        if (!game.gameStarted && flickerCount %3 == 0) {
-          
-          ctx.fillText(welcomeMessage, 370, 350);
-        }
+        if (!game.gameStarted && flickerCount %2 == 0) ctx.fillText(welcomeMessage, 370, 350);
       }
-      function controlFlik() {
-        let identificador2 = setInterval(()=> {
-          flickerWelcomeMessage();
-        }, 1000);
-      }
+    }
+    function controlFlik() {
+      flick = setInterval(()=> {
+        flickerWelcomeMessage();
+      }, 1000);
+    }
     
-  
-    // function parpadeando (){
-    //   if (!Game.gameStarted) parpadeo;
-    //   if (Game.gameStarted) clearInterval(parpadeo);
-    //         }
-        
-        }
   }
 
 //}
