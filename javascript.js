@@ -80,23 +80,20 @@ window.onload = () => {
         this.hCut = 20;
         this.hCanvas = 30;
         this.wCut = 20;
-        // this.yCanvas = this.yCanvas + 6;
         }
         if(koopaCount %8 == 1 || koopaCount %8 == 5){
-        this.xCut = 7;
-        this.yCut = 65;
-        this.hCut = 20;
-        this.hCanvas = 30;
-        this.wCut = 20;
-        // this.yCanvas = this.yCanvas + 6;
+          this.xCut = 7;
+          this.yCut = 65;
+          this.hCut = 20;
+          this.hCanvas = 30;
+          this.wCut = 20; 
         }
         if(koopaCount %8 == 2 || koopaCount %8 == 6){
-        this.xCut = 7;
-        this.yCut = 95;
-        this.hCut = 20;
-        this.hCanvas = 30;
-        this.wCut = 20;
-        // this.yCanvas = this.yCanvas + 6;
+          this.xCut = 7;
+          this.yCut = 95;
+          this.hCut = 20;
+          this.hCanvas = 30;
+          this.wCut = 20;
         }
         if(koopaCount %8 == 3 || koopaCount %8 == 7){
           this.xCut = 7;
@@ -104,8 +101,7 @@ window.onload = () => {
           this.hCut = 20;
           this.hCanvas = 30;
           this.wCut = 20;
-          // this.yCanvas = this.yCanvas + 6;
-          }
+        }
         if(koopaCount > 20) koopaCount = 0;
       }
     } 
@@ -177,7 +173,6 @@ window.onload = () => {
       this.jumpCount = 0;
       this.enemiesCount = 0;
       this.identificator;
-      this.enemyIndex;
       this.randomCounterEnemies = 20 + Math.floor(Math.random() * 60);
       this.numberOfEnemies = 0;
       this.castle = new Castle();
@@ -206,8 +201,9 @@ window.onload = () => {
       this.gameStarted = false;   //resetear todas las variables
       this.enemiesArmy.splice(0, this.enemiesArmy.length);
       this.castle.xCanvas = 1100;
-      this.jump = false;
       this.jumpCount = 0;
+      this.jump = false;
+      mario.killEnemy = false;
       this.enemiesCount = 0;
       this.numberOfEnemies = 0;
       mario.xCanvas = 500;
@@ -232,7 +228,7 @@ window.onload = () => {
       }
 
       this.enemiesCount ++;
-      if (this.enemiesCount == 70) {
+      if (this.enemiesCount == this.randomCounterEnemies) {
         this.newEnemy();
       }
       if (this.enemiesArmy.length > 0) {
@@ -258,6 +254,7 @@ window.onload = () => {
         this.jumpCount = 0;
         this.enemiesCount = 0;
         this.numberOfEnemies = 0;
+        mario.killEnemy = false;
         mario.xCanvas = 500;
         mario.yCanvas = 524 - mario.hCanvas;
       };
@@ -273,8 +270,6 @@ window.onload = () => {
             mario.killEnemy = true;
             enemy.rodando = true;
             enemy.yCanvas = enemy.yCanvas + 6;
-            
-            
           }
         }
       });
@@ -282,6 +277,7 @@ window.onload = () => {
 
     startGame() {
       this.gameStarted = true;
+      this.jump = false;
       clearInterval(flick);
       clearInterval(flick2);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -307,7 +303,6 @@ window.onload = () => {
           flickerGameOverMessage();
         }, 1000);
       }
-
     }
   }
 
@@ -340,8 +335,6 @@ scenaryImageLogo.onload = () => {
     }
     
   }
-
-//}
 
   ////////Start game///////////
 
