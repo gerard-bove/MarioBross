@@ -6,10 +6,10 @@ window.onload = () => {
   scenaryImageLogo.src = 'imagenes/Initial_logo.png';
 
   const marioImage = new Image();
-  marioImage.src = 'imagenes/Mario.png';
+  marioImage.src = 'imagenes/mario.png';
 
   const koopaImage = new Image();
-  koopaImage.src = 'imagenes/Enemies.png'
+  koopaImage.src = 'imagenes/enemies.png'
 
   const gameOverScreen = new Image();
   gameOverScreen.src = 'imagenes/Game_over_screen.webp'
@@ -19,6 +19,10 @@ window.onload = () => {
 
   const winGame = new Image();
   winGame.src = 'imagenes/win.jpg'
+
+  const jumpAudio = new Audio(src= "audio/smb_jump-small.wav");
+
+  const kickEnemy = new Audio(src= "audio/smb_kick.wav")
 
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
@@ -268,6 +272,7 @@ window.onload = () => {
         if ( mario.xCanvas + mario.wCanvas > enemy.xCanvas + 3 && mario.xCanvas + 3 < enemy.xCanvas + enemy.wCanvas ) { //colision por arriba: matar enemigo
           if ( mario.yCanvas + mario.hCanvas > enemy.yCanvas -10 && mario.killEnemy == false ) {  //colision por arriba: matar enemigo
             mario.killEnemy = true;
+            kickEnemy.play();
             enemy.rodando = true;
             enemy.yCanvas = enemy.yCanvas + 6;
           }
@@ -347,6 +352,7 @@ scenaryImageLogo.onload = () => {
       case "ArrowUp":
         if (!game.jump && game.gameStarted)
         game.jump = true;
+        jumpAudio.play();
         break;
       case ' ': 
         if (!game.gameStarted) {
