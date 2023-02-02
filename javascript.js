@@ -27,7 +27,7 @@ window.onload = () => {
 
   const jumpAudio = new Audio(src= "audio/smb_jump-small.wav");
 
-  const kickEnemy = new Audio(src= "audio/smb_kick.wav")
+  const kickEnemy = new Audio(src= "audio/smb_kick.wav");
 
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
