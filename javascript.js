@@ -21,7 +21,6 @@ window.onload = () => {
   ctx.font = "25px Arial";
   ctx.fillStyle = "white";
   let flickerCount = 0;
-  let marioCount = 0;
   let flick;
 
   let gameOverMessage = "Press Spacebar to restart";
@@ -29,6 +28,9 @@ window.onload = () => {
   ctx.fillStyle = "white";
   let flickerCount2 = 0;
   let flick2;
+
+  let marioCount = 0;
+  let koopaCount = 0;
 
   class Character {  
     constructor(img, xCut, yCut, wCut, hCut, xCanvas, wCanvas, hCanvas, xSpeed, ySpeed) {
@@ -42,7 +44,7 @@ window.onload = () => {
       this.wCanvas = wCanvas;
       this.hCanvas = hCanvas;
       this.xSpeed = xSpeed;
-      this.ySpeed = ySpeed
+      this.ySpeed = ySpeed;
     }
 
     draw() {
@@ -53,23 +55,65 @@ window.onload = () => {
   class Koopa extends Character{
     constructor() {
       super(koopaImage, 166, 0, 23, 30, 1100, 35, 40, 5)
+      this.rodando = false;
     }
 
     moveLeft() {
       this.xCanvas -= this.xSpeed;
+      if(this.rodando) this.xCanvas -= this.xSpeed;
     }
+
+    draw(){
+      koopaCount ++;
+      ctx.drawImage(this.img, this.xCut, this.yCut, this.wCut, this.hCut, this.xCanvas, this.yCanvas, this.wCanvas, this.hCanvas);
+      if(this.rodando){
+      if(koopaCount %8 == 0 || koopaCount %8 == 4){
+        this.xCut = 7;
+        this.yCut = 35;
+        this.hCut = 20;
+        this.hCanvas = 30;
+        this.wCut = 20;
+        // this.yCanvas = this.yCanvas + 6;
+        }
+        if(koopaCount %8 == 1 || koopaCount %8 == 5){
+        this.xCut = 7;
+        this.yCut = 65;
+        this.hCut = 20;
+        this.hCanvas = 30;
+        this.wCut = 20;
+        // this.yCanvas = this.yCanvas + 6;
+        }
+        if(koopaCount %8 == 2 || koopaCount %8 == 6){
+        this.xCut = 7;
+        this.yCut = 95;
+        this.hCut = 20;
+        this.hCanvas = 30;
+        this.wCut = 20;
+        // this.yCanvas = this.yCanvas + 6;
+        }
+        if(koopaCount %8 == 3 || koopaCount %8 == 7){
+          this.xCut = 7;
+          this.yCut = 125;
+          this.hCut = 20;
+          this.hCanvas = 30;
+          this.wCut = 20;
+          // this.yCanvas = this.yCanvas + 6;
+          }
+        if(koopaCount > 20) koopaCount = 0;
+      }
+    } 
   }
+
 
   class Mario extends Character{
     constructor() {
       super(marioImage, 500, 0, 30, 57, 500, 28, 50, 5, -6)
       this.down = false;
       this.killEnemy = false;
-      
     }
     
     jumpAction() {
-      this.yCanvas = this.yCanvas + this.ySpeed ;
+      this.yCanvas = this.yCanvas + this.ySpeed;
       if (this.killEnemy == true) {
         this.ySpeed = -6;
         this.down = false;
@@ -141,31 +185,32 @@ window.onload = () => {
       this.jump = false;
       this.jumpCount = 0;
       this.enemiesCount = 0;
-      mario.xCanvas = 500;
-      mario.yCanvas = 524 - mario.hCanvas;
-      //hacer drawImage de Game Over y llamar al texto "Press Space-bar"
+      mario.yCanvas = 524 - mario.hCanvas; 
       this.gameOverMessage();
     }
 
     update() {
       backgroundImage.move();
+      
       marioCount ++;
-      if (marioCount < 20) mario.yCut = 100;
-      if (marioCount > 20) mario.yCut = 200;
+      if (marioCount %13 == 0 || marioCount %13 == 1 || marioCount %13 == 6 || marioCount %13 == 7)  mario.yCut = 0;
+      if (marioCount %13 == 2 || marioCount %13 == 3 || marioCount %13 == 8 || marioCount %13 == 9 || marioCount %13 == 12) mario.yCut = 100;
+      if (marioCount %13 == 4 ||marioCount %13 == 5 || marioCount %13 == 10  || marioCount %13 == 11) mario.yCut = 200;
       if (marioCount == 40) marioCount = 0;
+
 
       if (this.jump) {   //Jump activado por la tecla flecha hacia arriba
         mario.jumpAction();
+        mario.yCut = 400;
       }
 
       this.enemiesCount ++;
-      if (this.enemiesCount == this.randomCounterEnemies) {
+      if (this.enemiesCount == 70) {
         this.newEnemy();
       }
       if (this.enemiesArmy.length > 0) {
         if (this.enemiesArmy[0].xCanvas < 0) this.enemiesArmy.shift();   //eliminar los enemigos que ya han pasado por el escenario
       }
-      
       
       this.drawAll();
       
@@ -178,7 +223,10 @@ window.onload = () => {
         if ( mario.xCanvas + mario.wCanvas > enemy.xCanvas + 3 && mario.xCanvas + 3 < enemy.xCanvas + enemy.wCanvas ) { //colision por arriba: matar enemigo
           if ( mario.yCanvas + mario.hCanvas > enemy.yCanvas -10 && mario.killEnemy == false ) {  //colision por arriba: matar enemigo
             mario.killEnemy = true;
-            this.enemiesArmy.splice(indice, 1);
+            enemy.rodando = true;
+            enemy.yCanvas = enemy.yCanvas + 6;
+            
+            
           }
         }
       });
@@ -216,7 +264,7 @@ window.onload = () => {
   }
 
   let mario = new Mario();
-  
+
 ////////Initial images///////////
 
 scenaryImage.onload = () => {
@@ -224,8 +272,8 @@ scenaryImage.onload = () => {
     ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
   }
 }
-
-scenaryImageLogo.onload = () => { 
+scenaryImageLogo.onload = () => {
+      
       if (!game.gameStarted) {
         ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
         controlFlik();
