@@ -45,6 +45,7 @@ window.onload = () => {
   let flick2;
 
   let marioCount = 0;
+  let koopaWalking = 0;
   let koopaCount = 0;
 
   class Character {  
@@ -80,8 +81,15 @@ window.onload = () => {
     }
 
     draw(){
-      koopaCount ++;
+      
       ctx.drawImage(this.img, this.xCut, this.yCut, this.wCut, this.hCut, this.xCanvas, this.yCanvas, this.wCanvas, this.hCanvas);
+      if(!this.rodando){
+        if (koopaWalking < 5)  this.yCut = 0;
+        if (koopaWalking > 5 && koopaWalking < 10)  this.yCut = 38;
+        if (koopaWalking > 10)  this.yCut = 78;
+        if (koopaWalking > 15) koopaWalking = 0;
+      }
+      
       if(this.rodando){
       if(koopaCount %8 == 0 || koopaCount %8 == 4){
         this.xCut = 7;
@@ -225,7 +233,8 @@ window.onload = () => {
 
     update() {
       backgroundImage.move();
-      
+      koopaCount ++;
+      koopaWalking ++;
       marioCount ++;
       if (marioCount %13 == 0 || marioCount %13 == 1 || marioCount %13 == 6 || marioCount %13 == 7)  mario.yCut = 0;
       if (marioCount %13 == 2 || marioCount %13 == 3 || marioCount %13 == 8 || marioCount %13 == 9 || marioCount %13 == 12) mario.yCut = 100;
@@ -273,6 +282,7 @@ window.onload = () => {
       };
 
       this.enemiesArmy.forEach((enemy, indice) => {
+        
         enemy.moveLeft()  //desplazar la posición de todos los enemigos(Koopa) hacia la izquierda
         enemy.draw();   //pintar toda la array de enemigos(Koopa)
         if ( mario.xCanvas + mario.wCanvas > enemy.xCanvas && mario.xCanvas < enemy.xCanvas + enemy.wCanvas ) { //colision eje X
