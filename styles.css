@@ -5,3 +5,9 @@ body {
   text-align: center;
   overflow-y: hidden;
 }
+div {
+  padding: 5px;
+}
+canvas {
+  border: 4px solid black;
+}
