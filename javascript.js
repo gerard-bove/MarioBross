@@ -20,6 +20,11 @@ window.onload = () => {
   const winGame = new Image();
   winGame.src = 'imagenes/win.jpg'
 
+  const mainAudio = new Audio (src = 'audio/main-theme-overworld.mp3');
+  const gameOverAudio = new Audio (src = 'audio/you-re-dead.mp3');
+  const winAudio = new Audio(src = 'audio/level-complete.mp3');
+
+
   const jumpAudio = new Audio(src= "audio/smb_jump-small.wav");
 
   const kickEnemy = new Audio(src= "audio/smb_kick.wav")
@@ -200,6 +205,8 @@ window.onload = () => {
     }
 
     gameOver() {
+      mainAudio.pause();
+      gameOverAudio.play();
       clearInterval(this.identificator);
       ctx.clearRect(0, 0, canvas.width, canvas.height); //borrar todas las imagenes
       this.gameStarted = false;   //resetear todas las variables
@@ -242,6 +249,8 @@ window.onload = () => {
       this.drawAll();
       
       if (mario.xCanvas + mario.wCanvas > this.castle.xCanvas + 140) { //condicion para ganar. entrar al castillo
+        mainAudio.pause();
+        winAudio.play();
         clearInterval(this.identificator);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(winGame, 0, 0, canvas.width, canvas.height);
@@ -356,6 +365,7 @@ scenaryImageLogo.onload = () => {
         break;
       case ' ': 
         if (!game.gameStarted) {
+          mainAudio.play();
           game.startGame(); //la tecla "espacio" inicia el juego;
         }
         break;
