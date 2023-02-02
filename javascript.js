@@ -14,6 +14,12 @@ window.onload = () => {
   const gameOverScreen = new Image();
   gameOverScreen.src = 'imagenes/Game_over_screen.webp'
 
+  const castleImage = new Image();
+  castleImage.src = 'imagenes/castle.png'
+
+  const winGame = new Image();
+  winGame.src = 'imagenes/win.jpg'
+
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
 
@@ -37,7 +43,7 @@ window.onload = () => {
       this.wCut = wCut;
       this.hCut = hCut;
       this.xCanvas = xCanvas;
-      this.yCanvas = 524 - hCanvas; 
+      this.yCanvas = 526 - hCanvas; 
       this.wCanvas = wCanvas;
       this.hCanvas = hCanvas;
       this.xSpeed = xSpeed;
@@ -49,6 +55,7 @@ window.onload = () => {
       ctx.drawImage(this.img, this.xCut, this.yCut, this.wCut, this.hCut, this.xCanvas, this.yCanvas, this.wCanvas, this.hCanvas);
     }
   }
+
   class Koopa extends Character{
     constructor() {
       super(koopaImage, 166, 0, 23, 30, 1100, 35, 40, 5)
@@ -86,6 +93,16 @@ window.onload = () => {
     }
   }
 
+  class Castle extends Character{
+    constructor() {
+      super(castleImage, 0, 0, 320, 370, 1100, 250, 300, 2)
+    }
+
+    moveLeft() {
+      this.xCanvas -= this.xSpeed;
+    }
+  }
+
   const backgroundImage = {
     img: scenaryImage,
     x: 0,
@@ -117,17 +134,23 @@ window.onload = () => {
       this.enemyIndex;
       this.randomCounterEnemies = 20 + Math.floor(Math.random() * 60);
       this.numberOfEnemies = 0;
+      this.castle = new Castle();
     }
 
     newEnemy() {
       this.enemiesArmy.push(new Koopa());
       this.enemiesCount = 0;
       this.randomCounterEnemies = 20 + Math.floor(Math.random() * 60);
+      this.numberOfEnemies ++;
     }
 
     drawAll() {
       ctx.clearRect(0, 0, canvas.width, canvas.height); //borrar todo
       backgroundImage.draw(); 
+      if (this.numberOfEnemies > 10) {
+        this.castle.moveLeft();
+        this.castle.draw();
+      }
       mario.draw();
     }
 
@@ -136,9 +159,11 @@ window.onload = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height); //borrar todas las imagenes
       this.gameStarted = false;   //resetear todas las variables
       this.enemiesArmy.splice(0, this.enemiesArmy.length);
+      this.castle.xCanvas = 1100;
       this.jump = false;
       this.jumpCount = 0;
       this.enemiesCount = 0;
+      this.numberOfEnemies = 0;
       mario.xCanvas = 500;
       mario.yCanvas = 524 - mario.hCanvas;
       //hacer drawImage de Game Over y llamar al texto "Press Space-bar"
@@ -157,12 +182,32 @@ window.onload = () => {
         this.newEnemy();
       }
       if (this.enemiesArmy.length > 0) {
-        if (this.enemiesArmy[0].xCanvas < 0) this.enemiesArmy.shift();   //eliminar los enemigos que ya han pasado por el escenario
+        if (this.enemiesArmy[0].xCanvas < 0) this.enemiesArmy.shift();  //eliminar los enemigos que ya han pasado por el escenario
       }
-      
       
       this.drawAll();
       
+      if (mario.xCanvas + mario.wCanvas > this.castle.xCanvas + 140) { //condicion para ganar. entrar al castillo
+        clearInterval(this.identificator);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(winGame, 0, 0, canvas.width, canvas.height);
+        ctx.font = "45px Arial";
+        ctx.fillStyle = "yellow";
+        ctx.fillText("YOU WIN!", 420, 50);
+        ctx.font = "25px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText(gameOverMessage, 420, 440);
+        this.gameStarted = false;   //resetear todas las variables
+        this.enemiesArmy.splice(0, this.enemiesArmy.length);
+        this.castle.xCanvas = 1100;
+        this.jump = false;
+        this.jumpCount = 0;
+        this.enemiesCount = 0;
+        this.numberOfEnemies = 0;
+        mario.xCanvas = 500;
+        mario.yCanvas = 524 - mario.hCanvas;
+      };
+
       this.enemiesArmy.forEach((enemy, indice) => {
         enemy.moveLeft()  //desplazar la posición de todos los enemigos(Koopa) hacia la izquierda
         enemy.draw();   //pintar toda la array de enemigos(Koopa)
@@ -171,7 +216,7 @@ window.onload = () => {
         }
         if ( mario.xCanvas + mario.wCanvas > enemy.xCanvas + 3 && mario.xCanvas + 3 < enemy.xCanvas + enemy.wCanvas ) { //colision por arriba: matar enemigo
           if ( mario.yCanvas + mario.hCanvas > enemy.yCanvas -10 && mario.killEnemy == false ) {  //colision por arriba: matar enemigo
-            mario.killEnemy = true;
+            mario.killEnemy = true; 
             this.enemiesArmy.splice(indice, 1);
           }
         }
@@ -268,7 +313,7 @@ scenaryImage.onload = () => {
     event.preventDefault();
     switch(event.key){
       case "ArrowUp":
-        if (!game.jump)
+        if (!game.jump && game.gameStarted)
         game.jump = true;
         break;
       case ' ': 
