@@ -1,4 +1,5 @@
 window.onload = () => {
+  
   const scenaryImage = new Image();
   scenaryImage.src = 'imagenes/Fondo_juego.png';
 
@@ -19,6 +20,9 @@ window.onload = () => {
 
   const winGame = new Image();
   winGame.src = 'imagenes/win.jpg'
+
+  const arrowkeys = new Image();
+  arrowkeys.src = 'imagenes/arrows.png';
 
   const mainAudio = new Audio (src = 'audio/main-theme-overworld.mp3');
   const gameOverAudio = new Audio (src = 'audio/you-re-dead.mp3');
@@ -342,14 +346,15 @@ scenaryImage.onload = () => {
 scenaryImageLogo.onload = () => {
       
       if (!game.gameStarted) {
-        ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+        ctx.drawImage(scenaryImageLogo, canvas.width/2 - 200, canvas.height/2 - 100, 250, 100);
         controlFlik();
       function flickerWelcomeMessage() {
         flickerCount ++;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
-        ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
-        if (!game.gameStarted && flickerCount %2 == 0) ctx.fillText(welcomeMessage, 370, 350);
+        ctx.drawImage(scenaryImageLogo, canvas.width/2 - 200, canvas.height/2 - 100, 250, 100);
+        ctx.drawImage(arrowkeys, canvas.width/2 - 180, 400, 200, 90);
+        if (!game.gameStarted && flickerCount %2 == 0) ctx.fillText(welcomeMessage, 285, 350);
       }
     }
     function controlFlik() {
