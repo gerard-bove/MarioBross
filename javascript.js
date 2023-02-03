@@ -32,6 +32,8 @@ window.onload = () => {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
 
+  const retroFont = new FontFace(src = 'font/Press+Start+2P');
+
   let welcomeMessage = "Press Spacebar to start game";
   ctx.font = "25px Arial";
   ctx.fillStyle = "white";
@@ -342,14 +344,14 @@ scenaryImage.onload = () => {
 scenaryImageLogo.onload = () => {
       
       if (!game.gameStarted) {
-        ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
+        ctx.drawImage(scenaryImageLogo, canvas.width/2, canvas.height/2 - 100, 250, 100);
         controlFlik();
       function flickerWelcomeMessage() {
         flickerCount ++;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(scenaryImage, 0, 0, canvas.width, canvas.height);
-        ctx.drawImage(scenaryImageLogo, canvas.width/2 - 125, canvas.height/2 - 100, 250, 100);
-        if (!game.gameStarted && flickerCount %2 == 0) ctx.fillText(welcomeMessage, 370, 350);
+        ctx.drawImage(scenaryImageLogo, canvas.width/2, canvas.height/2 - 100, 250, 100);
+        if (!game.gameStarted && flickerCount %2 == 0) ctx.fillText(welcomeMessage, 340, 350);
       }
     }
     function controlFlik() {
